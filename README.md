@@ -35,6 +35,8 @@ func NewYourFirstJob() golibcron.Job {
 
 func (y YourFirstJob) Run(ctx context.Context) {
     log.Infoc(ctx, "Job started")
+    // By using context, all logs will be printed will job name and run id. Eg:
+    // {..."msg":"Job started","job_meta":{"name":"YourFirstJob","run_id":"5fd8bc9e-6250-11ee-b2a1-448a5b97ab48"}}
 }
 
 func main() {
@@ -60,14 +62,23 @@ app:
     cron:
         jobs:
             -   name: YourFirstJob
+
+                #  The Cron Spec pattern requires 5 entries
+                #  representing: minute, hour, day of month, month and day of week, in that order.
+                #  It accepts
+                #   - Standard crontab specs, e.g. "* * * * ?"
+                #   - Descriptors, e.g. "@midnight", "@every 1h30m"
+                # Check the cron pattern at: https://en.wikipedia.org/wiki/Cron
                 spec: "@every 1m"
+
+                # When you want to disable job
+                disabled: false
 
             -   name: YourSecondJob
                 spec: "* * * * *"
-            #  The Cron Spec pattern requires 5 entries
-            #  representing: minute, hour, day of month, month and day of week, in that order.
-            #  It accepts
-            #   - Standard crontab specs, e.g. "* * * * ?"
-            #   - Descriptors, e.g. "@midnight", "@every 1h30m"
-            # Check the cron pattern at: https://en.wikipedia.org/wiki/Cron
+                disabled: false
+
+            -   name: YourThirdJob
+                spec: "* * * * *"
+                disabled: true
 ```

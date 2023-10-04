@@ -28,6 +28,6 @@ func NewRobfigJob(job Job) *RobfigJob {
 
 func (r RobfigJob) Run() {
 	id, _ := uuid.NewUUID()
-	ctx := context.WithValue(r.ctx, ContextValueJobRunId, id)
+	ctx := context.WithValue(r.ctx, ContextValueJobRunId, id.String())
 	r.job.Run(ctx)
 }

@@ -32,18 +32,29 @@ type RegisterJobIn struct {
 }
 
 func RegisterJob(in RegisterJobIn) error {
+	if len(in.Jobs) == 0 {
+		log.Infof("No cron jobs found to register")
+		return nil
+	}
 	log.Infof("Registering %d cron jobs", len(in.Jobs))
-	for _, cronJob := range in.Jobs {
-		jobName := utils.GetStructShortName(cronJob)
-		spec, found := in.Props.GetSpec(jobName)
+	registeredCount := 0
+	for _, job := range in.Jobs {
+		jobName := utils.GetStructShortName(job)
+		jobConfig, found := in.Props.GetJob(jobName)
 		if !found {
 			return fmt.Errorf("spec for job %s not found", jobName)
 		}
-		if err := in.Engine.AddJob(spec, cronJob); err != nil {
-			return errors.WithMessagef(err, "cannot register cron job %s with spec: %s", jobName, spec)
+		if jobConfig.Disabled {
+			log.Infof("Not-registered cron job [%s] due by job disabled", jobName)
+			continue
 		}
-		log.Infof("Registered cron job [%s] with spec [%s]", jobName, spec)
+		if err := in.Engine.AddJob(jobConfig.Spec, job); err != nil {
+			return errors.WithMessagef(err, "cannot register cron job %s with spec: %s", jobName, jobConfig.Spec)
+		}
+		registeredCount++
+		log.Infof("Registered cron job [%s] with spec [%s]", jobName, jobConfig.Spec)
 	}
+	log.Infof("Registered %d cron jobs", registeredCount)
 	return nil
 }
 

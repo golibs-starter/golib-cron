@@ -11,27 +11,30 @@ func NewProperties(loader config.Loader) (*Properties, error) {
 	return &props, err
 }
 
+type JobConfig struct {
+	Name     string
+	Spec     string
+	Disabled bool
+}
+
 type Properties struct {
-	Jobs []struct {
-		Name string
-		Spec string
-	}
-	jobSpecMap map[string]string
+	Jobs   []JobConfig
+	jobMap map[string]JobConfig
 }
 
 func (o *Properties) PostBinding() error {
-	o.jobSpecMap = make(map[string]string)
-	for _, spec := range o.Jobs {
-		if len(o.jobSpecMap[spec.Name]) != 0 {
-			return fmt.Errorf("duplicated cron job spec: %s", spec.Name)
+	o.jobMap = make(map[string]JobConfig)
+	for _, job := range o.Jobs {
+		if _, found := o.jobMap[job.Name]; found {
+			return fmt.Errorf("duplicated cron job config: %s", job.Name)
 		}
-		o.jobSpecMap[spec.Name] = spec.Spec
+		o.jobMap[job.Name] = job
 	}
 	return nil
 }
 
-func (o *Properties) GetSpec(jobName string) (spec string, found bool) {
-	spec, found = o.jobSpecMap[jobName]
+func (o *Properties) GetJob(jobName string) (job JobConfig, found bool) {
+	job, found = o.jobMap[jobName]
 	return
 }
 

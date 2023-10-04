@@ -6,7 +6,11 @@ import (
 )
 
 func NewDefaultRobfigCron(logger log.Logger) Engine {
-	c := cron.New(cron.WithLogger(NewRobfigLogger(logger)))
+	rogLogger := NewRobfigLogger(logger)
+	c := cron.New(
+		cron.WithLogger(rogLogger),
+		cron.WithChain(cron.Recover(rogLogger)),
+	)
 	return &RobfigCron{c: c}
 }
 

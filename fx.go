@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/golibs-starter/golib"
 	"github.com/golibs-starter/golib/log"
-	"github.com/golibs-starter/golib/utils"
 	"github.com/pkg/errors"
 	"go.uber.org/fx"
 )
@@ -39,7 +38,7 @@ func RegisterJob(in RegisterJobIn) error {
 	log.Infof("Registering %d cron jobs", len(in.Jobs))
 	registeredCount := 0
 	for _, job := range in.Jobs {
-		jobName := utils.GetStructShortName(job)
+		jobName := GetJobName(job)
 		jobConfig, found := in.Props.GetJob(jobName)
 		if !found {
 			return fmt.Errorf("spec for job %s not found", jobName)

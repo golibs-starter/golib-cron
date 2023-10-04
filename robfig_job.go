@@ -2,7 +2,6 @@ package golibcron
 
 import (
 	"context"
-	"github.com/golibs-starter/golib/utils"
 	"github.com/google/uuid"
 )
 
@@ -13,12 +12,7 @@ type RobfigJob struct {
 
 func NewRobfigJob(job Job) *RobfigJob {
 	ctx := context.Background()
-	jobName := ""
-	if namedJob, ok := job.(NamedJob); ok {
-		jobName = namedJob.Name()
-	} else {
-		jobName = utils.GetStructShortName(job)
-	}
+	jobName := GetJobName(job)
 	ctx = context.WithValue(ctx, ContextValueJobName, jobName)
 	return &RobfigJob{
 		job: job,

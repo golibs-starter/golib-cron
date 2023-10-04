@@ -5,8 +5,8 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-func NewDefaultRobfigCron(logger log.Logger) Engine {
-	rogLogger := NewRobfigLogger(logger)
+func NewDefaultRobfigCron(logger log.Logger, props *Properties) Engine {
+	rogLogger := NewRobfigLogger(logger, props.EnabledDebugMode)
 	c := cron.New(
 		cron.WithLogger(rogLogger),
 		cron.WithChain(cron.Recover(rogLogger)),

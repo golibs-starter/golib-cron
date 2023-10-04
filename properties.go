@@ -18,8 +18,9 @@ type JobConfig struct {
 }
 
 type Properties struct {
-	Jobs   []JobConfig
-	jobMap map[string]JobConfig
+	Jobs             []JobConfig
+	jobMap           map[string]JobConfig
+	EnabledDebugMode bool
 }
 
 func (o *Properties) PostBinding() error {

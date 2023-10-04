@@ -6,18 +6,24 @@ import (
 )
 
 type RobfigLogger struct {
-	logger log.Logger
+	logger             log.Logger
+	enableScheduleInfo bool
 }
 
-func NewRobfigLogger(logger log.Logger) *RobfigLogger {
-	return &RobfigLogger{logger: logger.WithField(
-		field.String("module", "cron"),
-		field.String("engine", "robfig"),
-	)}
+func NewRobfigLogger(logger log.Logger, enableScheduleInfo bool) *RobfigLogger {
+	return &RobfigLogger{
+		logger: logger.WithField(
+			field.String("module", "cron"),
+			field.String("engine", "robfig"),
+		),
+		enableScheduleInfo: enableScheduleInfo,
+	}
 }
 
 func (r RobfigLogger) Info(msg string, keysAndValues ...interface{}) {
-	r.logger.Debug(r.gatherArgs(msg, keysAndValues)...)
+	if r.enableScheduleInfo {
+		r.logger.Debug(r.gatherArgs(msg, keysAndValues)...)
+	}
 }
 
 func (r RobfigLogger) Error(err error, msg string, keysAndValues ...interface{}) {

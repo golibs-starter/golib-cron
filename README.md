@@ -80,23 +80,29 @@ func (y YourSecondCronJob) Run(ctx context.Context) {
 
 ```yaml
 app:
-    # Configuration available for golibcron.Opt()
-    cron:
-        jobs:
-            -   name: YourFirstJob
+  # Configuration available for golibcron.Opt()
+  cron:
 
-                #  The Cron Spec pattern requires 5 entries
-                #  representing: minute, hour, day of month, month and day of week, in that order.
-                #  It accepts
-                #   - Standard crontab specs, e.g. "* * * * ?"
-                #   - Descriptors, e.g. "@midnight", "@every 1h30m"
-                # Check the cron pattern at: https://en.wikipedia.org/wiki/Cron
-                spec: "@every 1m"
+    # When you want to enable debug mode for cron.
+    # It will print more detail about schedule info (disabled by default)
+    enabledDebugMode: false
 
-                # When you want to disable job. Accepts: true/false
-                disabled: false
+    # Declare your jobs
+    jobs:
+      - name: YourFirstJob
 
-            -   name: YourSecondCronJobWithCustomName
-                spec: "* * * * *"
-                disabled: true
+        #  The Cron Spec pattern requires 5 entries
+        #  representing: minute, hour, day of month, month and day of week, in that order.
+        #  It accepts
+        #   - Standard crontab specs, e.g. "* * * * ?"
+        #   - Descriptors, e.g. "@midnight", "@every 1h30m"
+        # Check the cron pattern at: https://en.wikipedia.org/wiki/Cron
+        spec: "@every 1m"
+
+        # When you want to disable job. Accepts: true/false
+        disabled: false
+
+      - name: YourSecondCronJobWithCustomName
+        spec: "* * * * *"
+        disabled: true
 ```
